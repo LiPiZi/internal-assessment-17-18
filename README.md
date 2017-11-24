@@ -6,7 +6,7 @@ CS IA 2017-18
 
 - [x] Define requirements and problem by: 11/12/2017
 
-- [ ] Type up Crit A by: 11/19/2017
+- [x] Type up Crit A by: 11/19/2017
 
 - [ ] Type up Crit B by: 12/3/2017
 
