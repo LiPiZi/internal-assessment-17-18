@@ -14,7 +14,7 @@ class Food():
 		print "A food was created. Its name is " + self.name + ", it costs " + \
 		str(self.price) + " dollars, we are buying " + str(self.quantity) + \
 		" of them, and its chilled value is " + str(self.chilled) + "."
-	def printagain():
+	def __call__():
 		print "bip bip I cost " + self.price + " dollars!"
 
 def yn_tf(b):
