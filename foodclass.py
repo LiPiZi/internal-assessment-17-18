@@ -9,12 +9,10 @@ class Food():
 		self.quantity = quantity
 		self.chilled = chilled
 		
-		self = self.name	
-		
 		print "A food was created. Its name is " + self.name + ", it costs " + \
 		str(self.price) + " dollars, we are buying " + str(self.quantity) + \
 		" of them, and its chilled value is " + str(self.chilled) + "."
-	def __call__():
+	def henlo():
 		print "bip bip I cost " + self.price + " dollars!"
 
 def yn_tf(b):
@@ -37,10 +35,12 @@ def new_food():
 def main():
 	cont = True
 	food_dict = {}
+	food_id = 0
 	while cont == True:
-		food_dict.append(new_food())
+		food_dict.update(food_id:new_food())
 		cont = yn_tf(raw_input("Continue? (y/n): "))
+		food_id += 1
 	for i in food_dict:
-		print food_dict[i]
+		food_dict[i]().henlo()
 if __name__ == "__main__":
 	main()
