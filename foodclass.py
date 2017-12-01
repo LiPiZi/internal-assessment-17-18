@@ -1,9 +1,15 @@
-import itertools
-
+class Person():
+	def __init__(self, id, name, cooler,):
+		
+		self.id = id
+		self.name = name
+		self.cooler = cooler
+		
+		
 class Food():
-	#newid = itertools.count().next
+	#The parts of the food
 	def __init__(self, name, price, quantity, chilled):	
-		#self.id = Food.newid()
+	
 		self.name = name
 		self.price = price
 		self.quantity = quantity
@@ -12,15 +18,21 @@ class Food():
 		print "A food was created. Its name is " + self.name + ", it costs " + \
 		str(self.price) + " dollars, we are buying " + str(self.quantity) + \
 		" of them, and its chilled value is " + str(self.chilled) + "."
-	def __call__(self):
-		print "bip bip I cost " + str(self.price) + " dollars!"
+	#for some reason, the dictionaries only let me use __call__
+	def __call__(self, n):
+		if n == 1:
+			return self.name
+		if n == 2:
+			return self.price
 
+#yesno_truefalse
 def yn_tf(b):
 	if b == "y":
 		return True
 	else:
 		return False
-	
+
+#This is its own thing and not an init because I might change the input method
 def new_food():
 	n = raw_input("Enter a name: ")
 	
@@ -40,7 +52,10 @@ def main():
 		food_dict.update({food_id: new_food()})
 		cont = yn_tf(raw_input("Continue? (y/n): "))
 		food_id += 1
+		
 	for i in food_dict:
-		food_dict[i]()
+		print food_dict[i](1)
+		print str(food_dict[i](2))
+		
 if __name__ == "__main__":
 	main()
