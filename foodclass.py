@@ -18,7 +18,8 @@ class Food():
 		print "A food was created. Its name is " + self.name + ", it costs " + \
 		str(self.price) + " dollars, we are buying " + str(self.quantity) + \
 		" of them, and its chilled value is " + str(self.chilled) + "."
-	#for some reason, the dictionaries only let me use __call__
+	'''for some reason, the dictionaries only let me use __call__, so I jerry-rigged
+	this guy to let me get all class params'''
 	def __call__(self, n):
 		if n == 1:
 			return self.name
@@ -32,7 +33,8 @@ def yn_tf(b):
 	else:
 		return False
 
-#This is its own thing and not an init because I might change the input method
+'''This is its own thing and not the food init because I might change the input method
+	in the future.'''
 def new_food():
 	n = raw_input("Enter a name: ")
 	
