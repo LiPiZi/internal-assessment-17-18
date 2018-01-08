@@ -63,7 +63,7 @@ def new_person():
 def main():
 	#These are a few things that will be made by other parts of the program.
 	expanded_food_price = collections.OrderedDict()
-	expanded_food_price = {"item1":0.02,"item2":0.02,"item3":0.03,"item4":0.04, "item5":0.05}
+	expanded_food_price = {"item1":0.10,"item2":0.02,"item3":0.03,"item4":0.04, "item5":0.05}
 	expanded_food_chilled_price = {"Milk1":2.99,"Milk1":2.99}
 	person_dict = {"Jack": False, "Jill":False, "Ernie":True}
 	
@@ -117,9 +117,11 @@ def main():
 	#consolidate or repack
 	i = 0
 	b = 0
-	
 	for i,b in person_amnt_dict.items():
+		price_percent_dict = {}
 		
-	
+	#intent: A dict of items that goes {Person:{Food1:percent, 
+	#food2:percent, food3:percent}}
+	#and then it will go {person:[food1, food2]}
 if __name__=="__main__":
 	main()
