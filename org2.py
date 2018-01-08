@@ -113,5 +113,13 @@ def main():
 		iterate_to += int(avg_price*100)
 	
 	print(person_amnt_dict.items())
+	
+	#consolidate or repack
+	i = 0
+	b = 0
+	
+	for i,b in person_amnt_dict.items():
+		
+	
 if __name__=="__main__":
 	main()
