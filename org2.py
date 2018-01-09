@@ -33,6 +33,11 @@ class Food():
 			return self.price
 	def henlo():
 		print("bibo")
+def fiftybool(number):
+	if number >= .5:
+		return True
+	else:
+		return False
 #yesno_truefalse
 def yn_tf(b):
 	if b == "y":
@@ -63,7 +68,7 @@ def new_person():
 def main():
 	#These are a few things that will be made by other parts of the program.
 	expanded_food_price = collections.OrderedDict()
-	expanded_food_price = {"item1":0.10,"item2":0.02,"item3":0.03,"item4":0.04, "item5":0.05}
+	expanded_food_price = {"item1":.99,"item2":1.99,"item3":2.99,"item4":3.99, "item5":4.99}
 	expanded_food_chilled_price = {"Milk1":2.99,"Milk1":2.99}
 	person_dict = {"Jack": False, "Jill":False, "Ernie":True}
 	
@@ -117,30 +122,37 @@ def main():
 	#'item2','item3'], 'jill':['item3','item3','item4'...]
 	
 	#consolidate or repack
-	i = 0
-	b = 0
-	person_price_percent_dict = {}
+	current_list = 0
+	current_person = 0
+	person_price_dict = {}
 	print("-------")
-	for i,b in person_amnt_dict.items():
+	for current_person,current_list in person_amnt_dict.items():
 		price_percent_dict = {}
-		current_list = b
 		internal_iterator = 0
-		last_item = b[0]
-		current_counter = 0.00
-		
+		last_item = current_list[0]
+		print(current_person+":")
 		#this should iterate through the current person's list
-		while internal_iterator+1 < len(b):
-			while b[internal_iterator] == last_item:
-				current_counter += .01
+		while internal_iterator < len(current_list):
+			current_counter = 0
+			while current_list[internal_iterator] == last_item:
+				current_counter += 1
 				internal_iterator += 1
-			price_percent_dict.update({b[internal_iterator-1]:current_counter})
-			print("iterate")
-		person_price_percent_dict.update({i:price_percent_dict})
-		print("iterate2")
+				print(internal_iterator,"/",len(current_list))
+				'''this breaks it before an error. Probably something
+				better exists.'''
+				if internal_iterator >= len(current_list):
+					break
+			current_percent = current_counter/(expanded_food_price[last_item]*100)
+			if internal_iterator < len(current_list):
+				last_item = current_list[internal_iterator]
+				#again, something better exists.
+			price_percent_dict.update({current_list[internal_iterator-1]:current_percent})
+		person_price_dict.update({current_person:price_percent_dict})
+	print(person_price_dict.items())
 		
-	print(person_price_percent_dict.items())
-	#intent: A dict of items that goes {Person:{Food1:percent, 
-	#food2:percent, food3:percent}} in person_price_percent_dict
-	#and then it will go {person:[food1, food2]}
+	'''intent: A dict of items that goes {Person:{Food1:percent, 
+	food2:percent, food3:percent}} in person_price_dict'''
+	
+	#and now {person:[food1, food2]}
 if __name__=="__main__":
 	main()

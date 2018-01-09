@@ -31,3 +31,6 @@ CS IA 2017-18
 - Program must have an easily accessable way to look up prices for products in Portland, Oregon.
 - Program must be able to let the client choose who is going to the race, and whether they have a cooler.
 - Program must be able to notify each client separately via email of what they are bringing to the race.
+
+# Known issues:
+- If you have an odd number of items, it will exclude the last one.
