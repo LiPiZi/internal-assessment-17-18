@@ -113,15 +113,34 @@ def main():
 		iterate_to += int(avg_price*100)
 	
 	print(person_amnt_dict.items())
+	#you should now be getting something like 'jack':['item1','item2',
+	#'item2','item3'], 'jill':['item3','item3','item4'...]
 	
 	#consolidate or repack
 	i = 0
 	b = 0
+	person_price_percent_dict = {}
+	print("-------")
 	for i,b in person_amnt_dict.items():
 		price_percent_dict = {}
+		current_list = b
+		internal_iterator = 0
+		last_item = b[0]
+		current_counter = 0.00
 		
+		#this should iterate through the current person's list
+		while internal_iterator+1 < len(b):
+			while b[internal_iterator] == last_item:
+				current_counter += .01
+				internal_iterator += 1
+			price_percent_dict.update({b[internal_iterator-1]:current_counter})
+			print("iterate")
+		person_price_percent_dict.update({i:price_percent_dict})
+		print("iterate2")
+		
+	print(person_price_percent_dict.items())
 	#intent: A dict of items that goes {Person:{Food1:percent, 
-	#food2:percent, food3:percent}}
+	#food2:percent, food3:percent}} in person_price_percent_dict
 	#and then it will go {person:[food1, food2]}
 if __name__=="__main__":
 	main()
