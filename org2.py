@@ -149,7 +149,21 @@ def main():
 			price_percent_dict.update({current_list[internal_iterator-1]:current_percent})
 		person_price_dict.update({current_person:price_percent_dict})
 	print(person_price_dict.items())
-		
+	
+	person = 0
+	current_dict = {}
+	person_item_dict = {} #final output!
+	for person,current_dict in person_price_dict.items():
+		percent = 0
+		item = 0
+		item_list = []
+		print(current_dict.items())
+		#for item,percent in current_dict:
+		#	include = fiftybool(percent)
+		#	if include == True:
+		#		item_list.append(item)
+		#person_item_dict.update({person:item_list})
+	#print(person_item_dict.items())
 	'''intent: A dict of items that goes {Person:{Food1:percent, 
 	food2:percent, food3:percent}} in person_price_dict'''
 	
