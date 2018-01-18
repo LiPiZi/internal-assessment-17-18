@@ -32,6 +32,7 @@ class Food():
 			return self.price
 	def henlo():
 		print "bibo"
+		
 #yesno_truefalse
 def yn_tf(b):
 	if b == "y":

@@ -32,8 +32,6 @@ class Food():
 			return self.name
 		if n == 2:
 			return self.price
-	def henlo():
-		print("bibo")
 def fiftybool(number):
 	if number >= .5:
 		return True
@@ -48,42 +46,36 @@ def yn_tf(b):
 
 #This is its own thing and not an init because I might change the input method
 def new_food():
-	n = raw_input("Enter a food name: ")
+	n = input("Enter a food name: ")
 	
 	p = float(input("Enter the price: "))
 	
 	q = int(input("Enter the number you're buying: "))
 	
-	c = yn_tf(raw_input("Enter whether it is chilled (y/n): "))
+	c = yn_tf(input("Enter whether it is chilled (y/n): "))
 	
 	return Food(n, p, q, c)
 
 def new_person():
 	
-	n = raw_input("Enter a person name: ")
-	c = yn_tf(raw_input("Enter whether this person has a cooler (y/n): "))
+	n = input("Enter a person name: ")
+	c = yn_tf(input("Enter whether this person has a cooler (y/n): "))
 	
 	return Person(n, c)
 	
 	
 def main():
+	
+	food_list = []
 	cont = True
-	food_dict = {}
-	food_id = 0
 	while cont == True:
-		food_dict.update({food_id: new_food()})
-		cont = yn_tf(raw_input("Continue? (y/n): "))
-		food_id += 1
-		
-	for i in food_dict:
-		print food_dict[i](1)
-		print str(food_dict[i](2))
-		
+		food_list.append(new_food())
+		cont = yn_tf(input("Next food? (y/n)"))
 	#These are a few things that will be made by other parts of the program.
 #	expanded_food_price = collections.OrderedDict()
 #	expanded_food_price = {"item1":1000,"item2":1000,"item3":999.99,"item4":1000, "item5":1000}
 #	expanded_food_chilled_price = {"Milk1":2.99,"Milk1":2.99}
-#	person_dict = {"Jack": False, "Jill":False, "Ernie":True}
+	person_dict = {"Jack": False, "Jill":False, "Ernie":True}
 	
 	#calculate total price
 	total_price = 0.0
