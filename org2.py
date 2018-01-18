@@ -1,5 +1,6 @@
 
 import collections
+import sys
 
 class Person():
 	def __init__(self, name, cooler,):
@@ -66,11 +67,23 @@ def new_person():
 	
 	
 def main():
+	cont = True
+	food_dict = {}
+	food_id = 0
+	while cont == True:
+		food_dict.update({food_id: new_food()})
+		cont = yn_tf(raw_input("Continue? (y/n): "))
+		food_id += 1
+		
+	for i in food_dict:
+		print food_dict[i](1)
+		print str(food_dict[i](2))
+		
 	#These are a few things that will be made by other parts of the program.
-	expanded_food_price = collections.OrderedDict()
-	expanded_food_price = {"item1":.99,"item2":1.99,"item3":2.99,"item4":3.99, "item5":4.99}
-	expanded_food_chilled_price = {"Milk1":2.99,"Milk1":2.99}
-	person_dict = {"Jack": False, "Jill":False, "Ernie":True}
+#	expanded_food_price = collections.OrderedDict()
+#	expanded_food_price = {"item1":1000,"item2":1000,"item3":999.99,"item4":1000, "item5":1000}
+#	expanded_food_chilled_price = {"Milk1":2.99,"Milk1":2.99}
+#	person_dict = {"Jack": False, "Jill":False, "Ernie":True}
 	
 	#calculate total price
 	total_price = 0.0
@@ -80,13 +93,10 @@ def main():
 	person_list = []
 	person_chilled_list = []
 	for a,b in person_dict.items():
-		print(a,b)
 		if b == False:
 			person_list.append(a)
 		else:
 			person_chilled_list.append(a)
-	
-	print(person_list)
 	#calculate and round average price
 	avg_price = total_price/(len(person_list))
 	avg_price = int(avg_price*100)/100.00
@@ -116,8 +126,6 @@ def main():
 		person_amnt_dict.update({person_list[i]:cent_list_for_person})
 		i+=1
 		iterate_to += int(avg_price*100)
-	
-	print(person_amnt_dict.items())
 	#you should now be getting something like 'jack':['item1','item2',
 	#'item2','item3'], 'jill':['item3','item3','item4'...]
 	
@@ -125,19 +133,18 @@ def main():
 	current_list = 0
 	current_person = 0
 	person_price_dict = {}
-	print("-------")
 	for current_person,current_list in person_amnt_dict.items():
 		price_percent_dict = {}
 		internal_iterator = 0
 		last_item = current_list[0]
-		print(current_person+":")
+		print("\n",current_person+":")
 		#this should iterate through the current person's list
 		while internal_iterator < len(current_list):
 			current_counter = 0
 			while current_list[internal_iterator] == last_item:
 				current_counter += 1
 				internal_iterator += 1
-				print(internal_iterator,"/",len(current_list))
+				sys.stdout.write('\r'+str(internal_iterator)+"/"+str(len(current_list)))
 				'''this breaks it before an error. Probably something
 				better exists.'''
 				if internal_iterator >= len(current_list):
@@ -148,8 +155,9 @@ def main():
 				#again, something better exists.
 			price_percent_dict.update({current_list[internal_iterator-1]:current_percent})
 		person_price_dict.update({current_person:price_percent_dict})
-	print(person_price_dict.items())
-	
+	'''intent: A dict of items that goes {Person:{Food1:percent, 
+		food2:percent, food3:percent}} in person_price_dict'''
+		
 	person = 0
 	current_dict = {}
 	person_item_dict = {} #final output!
@@ -157,15 +165,12 @@ def main():
 		percent = 0
 		item = 0
 		item_list = []
-		print(current_dict.items())
-		#for item,percent in current_dict:
-		#	include = fiftybool(percent)
-		#	if include == True:
-		#		item_list.append(item)
-		#person_item_dict.update({person:item_list})
-	#print(person_item_dict.items())
-	'''intent: A dict of items that goes {Person:{Food1:percent, 
-	food2:percent, food3:percent}} in person_price_dict'''
+		for item,percent in current_dict.items():
+			include = fiftybool(percent)
+			if include == True:
+				item_list.append(item)
+		person_item_dict.update({person:item_list})
+	print("\n",person_item_dict)
 	
 	#and now {person:[food1, food2]}
 if __name__=="__main__":
