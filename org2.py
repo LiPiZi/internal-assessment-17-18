@@ -14,6 +14,7 @@ class Person():
 			return self.name
 		if n == 2:
 			return self.cooler
+
 class Food():
 	#The parts of the food
 	def __init__(self, name, price, quantity, chilled):	
@@ -32,6 +33,11 @@ class Food():
 			return self.name
 		if n == 2:
 			return self.price
+		if n == 3:
+			return self.quantity
+		if n == 4:
+			return self.chilled
+
 def fiftybool(number):
 	if number >= .5:
 		return True
@@ -56,8 +62,15 @@ def new_food():
 	
 	return Food(n, p, q, c)
 
-def new_person():
+def pick_food():
+	food_list = []
+	cont = True
+	while cont == True:
+		food_list.append(new_food())
+		cont = yn_tf(input("Next food? (y/n)"))
+	return food_list
 	
+def new_person():	
 	n = input("Enter a person name: ")
 	c = yn_tf(input("Enter whether this person has a cooler (y/n): "))
 	
@@ -66,15 +79,24 @@ def new_person():
 	
 def main():
 	
-	food_list = []
-	cont = True
-	while cont == True:
-		food_list.append(new_food())
-		cont = yn_tf(input("Next food? (y/n)"))
-	#These are a few things that will be made by other parts of the program.
-#	expanded_food_price = collections.OrderedDict()
-#	expanded_food_price = {"item1":1000,"item2":1000,"item3":999.99,"item4":1000, "item5":1000}
-#	expanded_food_chilled_price = {"Milk1":2.99,"Milk1":2.99}
+	food_list = pick_food()
+	expanded_food_price = collections.OrderedDict()
+	expanded_food_chilled_price = collections.OrderedDict()
+	for current_item in food_list:
+		i = 0
+		if current_item(4) == False:
+			for i in range(current_item(3)):
+				currstring = current_item(1) + ", number " + str(i+1) \
+				+ " of " + str(current_item(3))
+				expanded_food_price.update({currstring:current_item(2)}
+				)
+		if current_item(4) == True:
+			for i in range(current_item(3)):
+				currstring = current_item(1) + ", number " + str(i+1) \
+				+ " of " + str(current_item(3))
+				expanded_food_chilled_price.update(
+				{currstring:current_item(2)})
+	print(expanded_food_price.items())
 	person_dict = {"Jack": False, "Jill":False, "Ernie":True}
 	
 	#calculate total price
