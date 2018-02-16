@@ -1,6 +1,16 @@
 import collections
 import sys
 
+from __future__ import print_function
+import httplib2
+import os
+
+from apiclient import discovery
+from oauth2client import client
+from oauth2client import tools
+from oauth2client.file import Storage
+
+
 class Person():
 	def __init__(self, name, cooler, email):
 		
@@ -84,7 +94,50 @@ def pick_person():
 		person_list.append(new_person())
 		cont = yn_tf(input("Next person? (y/n)"))
 	return person_list
+
 	
+	
+	
+	
+def create_message(sender, to, subject, message_text):
+	"""Create a message for an email.
+	Args:
+	 sender: Email address of the sender.
+	 to: Email address of the receiver.
+	 subject: The subject of the email message.
+	 message_text: The text of the email message.
+
+	Returns:
+	 An object containing a base64url encoded email object.
+	"""
+	message = MIMEText(message_text)
+	message['to'] = to
+	message['from'] = sender
+	message['subject'] = subject
+	return {'raw': base64.urlsafe_b64encode(message.as_string())}
+	
+def send_message(service, user_id, message):
+	"""Send an email message.
+
+	Args:
+	 service: Authorized Gmail API service instance.
+	 user_id: User's email address. The special value "me"
+	 can be used to indicate the authenticated user.
+	 message: Message to be sent.
+
+	Returns:
+	 Sent Message.
+	"""
+	try:
+		message = (service.users().messages().send(userId=user_id, body=message).execute())
+		print('Message Id: %s' % message['id'])
+		return message
+	except errors.HttpError, error:
+		print 'An error occurred: %s' % error
+		
+		
+		
+
 def main():
 	food_list = pick_food()
 	person_list_initial = pick_person()
@@ -198,8 +251,16 @@ def main():
 	a=0
 	b=0
 	print("\n")
+	email = "orufoodbot@gmail.com"
+	subject = "Food to buy at the coming regatta:"
+	api
 	for a,b in person_item_dict.items():
-		print(a(1), "|", a(3), "|", b, "\n")
-
+		content  = "hello, " + a(1) + ". I am a robot, beep boop. you \
+			have to buy: " + str(b)
+		message = create_message(email, a(3), subject, content)
+		send_message(api,me,message)
+		
+	
+	
 if __name__=="__main__":
 	main()
