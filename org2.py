@@ -1,15 +1,21 @@
 import collections
 import sys
 
-from __future__ import print_function
+#from __future__ import print_function
 import httplib2
 import os
+import requests
 
-from apiclient import discovery
-from oauth2client import client
-from oauth2client import tools
-from oauth2client.file import Storage
+import mysql.connector
 
+def send_simple_message(to, subject, text):
+    return requests.post(
+        "https://api.mailgun.net/v3/sandbox3aa68c824bb54537a83a7c105c0bb808.mailgun.org/messages",
+        auth=("api", "key-1b32470b114f32e62991f9b79edc13b1"),
+        data={"from": "Mailgun Sandbox <postmaster@sandbox3aa68c824bb54537a83a7c105c0bb808.mailgun.org>",
+              "to": to,
+              "subject": subject,
+              "text": text})
 
 class Person():
 	def __init__(self, name, cooler, email):
@@ -96,48 +102,6 @@ def pick_person():
 	return person_list
 
 	
-	
-	
-	
-def create_message(sender, to, subject, message_text):
-	"""Create a message for an email.
-	Args:
-	 sender: Email address of the sender.
-	 to: Email address of the receiver.
-	 subject: The subject of the email message.
-	 message_text: The text of the email message.
-
-	Returns:
-	 An object containing a base64url encoded email object.
-	"""
-	message = MIMEText(message_text)
-	message['to'] = to
-	message['from'] = sender
-	message['subject'] = subject
-	return {'raw': base64.urlsafe_b64encode(message.as_string())}
-	
-def send_message(service, user_id, message):
-	"""Send an email message.
-
-	Args:
-	 service: Authorized Gmail API service instance.
-	 user_id: User's email address. The special value "me"
-	 can be used to indicate the authenticated user.
-	 message: Message to be sent.
-
-	Returns:
-	 Sent Message.
-	"""
-	try:
-		message = (service.users().messages().send(userId=user_id, body=message).execute())
-		print('Message Id: %s' % message['id'])
-		return message
-	except errors.HttpError, error:
-		print 'An error occurred: %s' % error
-		
-		
-		
-
 def main():
 	food_list = pick_food()
 	person_list_initial = pick_person()
@@ -253,12 +217,10 @@ def main():
 	print("\n")
 	email = "orufoodbot@gmail.com"
 	subject = "Food to buy at the coming regatta:"
-	api
 	for a,b in person_item_dict.items():
 		content  = "hello, " + a(1) + ". I am a robot, beep boop. you \
 			have to buy: " + str(b)
-		message = create_message(email, a(3), subject, content)
-		send_message(api,me,message)
+		send_simple_message(a(3),subject, content)
 		
 	
 	

@@ -3,132 +3,108 @@ import os
 import oauth2client
 from oauth2client import client, tools
 import base64
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from apiclient import errors, discovery
+from email import encoders
+
+#needed for attachment
+import smtplib  
 import mimetypes
-from email.mime.image import MIMEImage
+from email import encoders
+from email.message import Message
 from email.mime.audio import MIMEAudio
 from email.mime.base import MIMEBase
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
+#List of all mimetype per extension: http://help.dottoro.com/lapuadlp.php  or http://mime.ritey.com/
 
-SCOPES = 'https://www.googleapis.com/auth/gmail.send'
-CLIENT_SECRET_FILE = 'client_secret.json'
-APPLICATION_NAME = 'Gmail API Python Send Email'
+from apiclient import errors, discovery  #needed for gmail service
 
+
+
+
+## About credentials
+# There are 2 types of "credentials": 
+#	 the one created and downloaded from https://console.developers.google.com/apis/ (let's call it the client_id) 
+#	 the one that will be created from the downloaded client_id (let's call it credentials, it will be store in C:\Users\user\.credentials)
+
+
+		#Getting the CLIENT_ID 
+			# 1) enable the api you need on https://console.developers.google.com/apis/
+			# 2) download the .json file (this is the CLIENT_ID)
+			# 3) save the CLIENT_ID in same folder as your script.py 
+			# 4) update the CLIENT_SECRET_FILE (in the code below) with the CLIENT_ID filename
+
+
+		#Optional
+		# If you don't change the permission ("scope"): 
+			#the CLIENT_ID could be deleted after creating the credential (after the first run)
+
+		# If you need to change the scope:
+			# you will need the CLIENT_ID each time to create a new credential that contains the new scope.
+			# Set a new credentials_path for the new credential (because it's another file)
 def get_credentials():
-    home_dir = os.path.expanduser('~')
-    credential_dir = os.path.join(home_dir, '.credentials')
-    if not os.path.exists(credential_dir):
-        os.makedirs(credential_dir)
-    credential_path = os.path.join(credential_dir,
-                                   'gmail-python-email-send.json')
-    store = oauth2client.file.Storage(credential_path)
-    credentials = store.get()
-    if not credentials or credentials.invalid:
-        flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
-        flow.user_agent = APPLICATION_NAME
-        credentials = tools.run_flow(flow, store)
-        print('Storing credentials to ' + credential_path)
-    return credentials
+	# If needed create folder for credential
+	home_dir = os.path.expanduser('~') #>> C:\Users\Me
+	credential_dir = os.path.join(home_dir, '.credentials') # >>C:\Users\Me\.credentials   (it's a folder)
+	if not os.path.exists(credential_dir):
+		os.makedirs(credential_dir)  #create folder if doesnt exist
+	credential_path = os.path.join(credential_dir, 'cred send mail.json')
 
-def SendMessage(sender, to, subject, msgHtml, msgPlain, attachmentFile=None):
-    credentials = get_credentials()
-    http = credentials.authorize(httplib2.Http())
-    service = discovery.build('gmail', 'v1', http=http)
-    if attachmentFile:
-        message1 = createMessageWithAttachment(sender, to, subject, msgHtml, msgPlain, attachmentFile)
-    else: 
-        message1 = CreateMessageHtml(sender, to, subject, msgHtml, msgPlain)
-    result = SendMessageInternal(service, "me", message1)
-    return result
+	#Store the credential
+	store = oauth2client.file.Storage(credential_path)
+	credentials = store.get()
 
-def SendMessageInternal(service, user_id, message):
-    try:
-        message = (service.users().messages().send(userId=user_id, body=message).execute())
-        print('Message Id: %s' % message['id'])
-        return message
-    except errors.HttpError as error:
-        print('An error occurred: %s' % error)
-        return "Error"
-    return "OK"
+	if not credentials or credentials.invalid:
+		CLIENT_SECRET_FILE = 'client_id to send Gmail.json'
+		APPLICATION_NAME = 'Gmail API Python Send Email'
+		#The scope URL for read/write access to a user's calendar data  
 
-def CreateMessageHtml(sender, to, subject, msgHtml, msgPlain):
-    msg = MIMEMultipart('alternative')
-    msg['Subject'] = subject
-    msg['From'] = sender
-    msg['To'] = to
-    msg.attach(MIMEText(msgPlain, 'plain'))
-    msg.attach(MIMEText(msgHtml, 'html'))
-    return {'raw': base64.urlsafe_b64encode(msg.as_string())}
+		SCOPES = 'https://www.googleapis.com/auth/gmail.send'
 
-def createMessageWithAttachment(
-    sender, to, subject, msgHtml, msgPlain, attachmentFile):
-    """Create a message for an email.
+		# Create a flow object. (it assists with OAuth 2.0 steps to get user authorization + credentials)
+		flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
+		flow.user_agent = APPLICATION_NAME
 
-    Args:
-      sender: Email address of the sender.
-      to: Email address of the receiver.
-      subject: The subject of the email message.
-      msgHtml: Html message to be sent
-      msgPlain: Alternative plain text message for older email clients          
-      attachmentFile: The path to the file to be attached.
+		credentials = tools.run_flow(flow, store)
 
-    Returns:
-      An object containing a base64url encoded email object.
-    """
-    message = MIMEMultipart('mixed')
-    message['to'] = to
-    message['from'] = sender
-    message['subject'] = subject
+	return credentials
 
-    messageA = MIMEMultipart('alternative')
-    messageR = MIMEMultipart('related')
+def create_message_without_attachment (sender, to, subject, message_text_html, message_text_plain):
+	#Create message container
+	message = MIMEMultipart('alternative') # needed for both plain & HTML (the MIME type is multipart/alternative)
+	message['Subject'] = subject
+	message['From'] = sender
+	message['To'] = to
 
-    messageR.attach(MIMEText(msgHtml, 'html'))
-    messageA.attach(MIMEText(msgPlain, 'plain'))
-    messageA.attach(messageR)
+	#Create the body of the message (a plain-text and an HTML version)
+	message.attach(MIMEText(message_text_plain, 'plain'))
+	message.attach(MIMEText(message_text_html, 'html'))
 
-    message.attach(messageA)
+	raw_message_no_attachment = base64.urlsafe_b64encode(message.as_bytes())
+	raw_message_no_attachment = raw_message_no_attachment.decode()
+	body  = {'raw': raw_message_no_attachment}
+	return body
 
-    print("create_message_with_attachment: file: %s" % attachmentFile)
-    content_type, encoding = mimetypes.guess_type(attachmentFile)
-
-    if content_type is None or encoding is not None:
-        content_type = 'application/octet-stream'
-    main_type, sub_type = content_type.split('/', 1)
-    if main_type == 'text':
-        fp = open(attachmentFile, 'rb')
-        msg = MIMEText(fp.read(), _subtype=sub_type)
-        fp.close()
-    elif main_type == 'image':
-        fp = open(attachmentFile, 'rb')
-        msg = MIMEImage(fp.read(), _subtype=sub_type)
-        fp.close()
-    elif main_type == 'audio':
-        fp = open(attachmentFile, 'rb')
-        msg = MIMEAudio(fp.read(), _subtype=sub_type)
-        fp.close()
-    else:
-        fp = open(attachmentFile, 'rb')
-        msg = MIMEBase(main_type, sub_type)
-        msg.set_payload(fp.read())
-        fp.close()
-    filename = os.path.basename(attachmentFile)
-    msg.add_header('Content-Disposition', 'attachment', filename=filename)
-    message.attach(msg)
-
-    return {'raw': base64.urlsafe_b64encode(message.as_string())}
-
+def send_message_without_attachement(service, user_id, body, message_text_plain):
+	try:
+		message_sent = (service.users().messages().send(userId=user_id, body=body).execute())
+		message_id = message_sent['id']
+		# print(attached_file)
+		print (f'Message sent (without attachment) \n\n Message Id: {message_id}\n\n Message:\n\n {message_text_plain}')
+		# return body
+	except errors.HttpError as error:
+		print (f'An error occurred: {error}')
 
 def main():
-    to = "to@address.com"
-    sender = "from@address.com"
-    subject = "subject"
-    msgHtml = "Hi<br/>Html Email"
-    msgPlain = "Hi\nPlain Email"
-    SendMessage(sender, to, subject, msgHtml, msgPlain)
-    # Send message with attachment: 
-    SendMessage(sender, to, subject, msgHtml, msgPlain, '/path/to/file.pdf')
+	to = "youremail@gmail.com"
+	sender = "myemail@gmail.com"
+	subject = "subject test1"
+	message_text_html  = r'Hi<br/>Html <b>hello</b>'
+	message_text_plain = "Hi\nPlain Email"
+	service = get_credentials()
+	send_message_without_attachement(service, 
+
 
 if __name__ == '__main__':
-    main()
+		main()
