@@ -7,15 +7,7 @@ import os
 import requests
 
 import mysql.connector
-
-def send_simple_message(to, subject, text):
-    return requests.post(
-        "https://api.mailgun.net/v3/sandbox3aa68c824bb54537a83a7c105c0bb808.mailgun.org/messages",
-        auth=("api", "key-1b32470b114f32e62991f9b79edc13b1"),
-        data={"from": "Mailgun Sandbox <postmaster@sandbox3aa68c824bb54537a83a7c105c0bb808.mailgun.org>",
-              "to": to,
-              "subject": subject,
-              "text": text})
+#api stuff here had to delete it
 
 class Person():
 	def __init__(self, name, cooler, email):
