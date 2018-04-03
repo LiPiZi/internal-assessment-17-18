@@ -33,4 +33,4 @@ CS IA 2017-18
 - Program must be able to notify each client separately via email of what they are bringing to the race.
 
 # Known issues:
-- If you have an odd number of items, it will exclude the last one.
+- If you have an odd number of items by cent, it will exclude the last one.
