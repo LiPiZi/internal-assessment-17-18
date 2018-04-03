@@ -23,7 +23,7 @@ def send_simple_message(to, subject, text):
               "to": to,
               "subject": subject,
               "text": text})
-
+			  
 class Person():
 	def __init__(self, name, cooler, email):
 		
