@@ -9,14 +9,13 @@ import requests
 import mysql.connector
 
 def send_simple_message(to, subject, text):
-    return requests.post(
-		finfo=open("mginfo.txt", "r")
-		uri = finfo.readline()
-		key = finfo.readline()
-		address = finfo.readline()
-		
-		finfo.close()
-		
+	finfo = open("mginfo.txt", "r")
+	uri = finfo.readline()
+	key = finfo.readline()
+	address = finfo.readline()
+	finfo.close()
+	print(uri,key,address)
+	return requests.post(
         uri,
         auth=("api", key),
         data={"from": address,
