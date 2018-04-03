@@ -1,0 +1,3 @@
+https://api.mailgun.net/v3/sandbox3aa68c824bb54537a83a7c105c0bb808.mailgun.org/messages
+key-1b32470b114f32e62991f9b79edc13b1
+Mailgun Sandbox <postmaster@sandbox3aa68c824bb54537a83a7c105c0bb808.mailgun.org>
