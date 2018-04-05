@@ -1,26 +1,21 @@
 import collections
 import sys
 
+#from __future__ import print_function
 import httplib2
 import os
 import requests
 
 import mysql.connector
 
-def send_simple_message(to, subject, text)
-    finfo = open("mginfo.txt", "r")
-	uri = finfo.readline()
-	key = finfo.readline()
-	address = finfo.readline()
-	finfo.close()
-		
+'''def send_simple_message(to, subject, text):
 	return requests.post(
-        uri,
-        auth=("api", key),
-        data={"from": address,
+        "uri",
+        auth=("api", "key"),
+        data={"data",
               "to": to,
               "subject": subject,
-              "text": text})
+              "text": text})'''
 			  
 class Person():
 	def __init__(self, name, cooler, email):
@@ -80,7 +75,8 @@ def new_food():
 	
 	q = int(input("Enter the number you're buying: "))
 	
-	c = yn_tf(input("Enter whether it is chilled (y/n): "))
+	c = False
+	#yn_tf(input("Enter whether it is chilled (y/n): "))
 	
 	return Food(n, p, q, c)
 
@@ -95,10 +91,9 @@ def pick_food():
 def pick_person():
 	person_list = []
 	cont = True
-	pw='password' #fake of course
-	cnx =1 mysql.connector.connect(user='root', password=pw, host='127.0.0.1', database='orufood')
+	cnx = mysql.connector.connect(user='root', password='password', host='127.0.0.1', database='orufood')
 	cursor = cnx.cursor()
-	query = "SELECT email, name FROM patron" #READ QUERY
+	query = "SELECT email, name FROM patron"
 	cursor.execute(query)
 	for (email, name) in cursor:
 		go = yn_tf(input("is " + name + " going? (y/n)"))
@@ -120,24 +115,22 @@ def main():
 	expanded_food_price = collections.OrderedDict()
 	expanded_food_chilled_price = collections.OrderedDict()
 	
-	'''Separate Cooler foods and Non-cooler foods into dictionaries
-		FOOD NAME:FOOD PRICE - the class object of food will no longer
-		be used'''
 	for current_item in food_list:
 		i = 0
 		if current_item(4) == False:
 			for i in range(current_item(3)):
-				currstring = current_item(1) + " (number " + str(i+1) \
-				+ " of " + str(current_item(3)) + ")"
+				currstring = current_item(1) + ", number " + str(i+1) \
+				+ " of " + str(current_item(3))
 				expanded_food_price.update({currstring:current_item(2)}
 				)
 		if current_item(4) == True:
 			for i in range(current_item(3)):
-				currstring = current_item(1) + " (number " + str(i+1) \
-				+ " of " + str(current_item(3)) + ")"
+				currstring = current_item(1) + ", number " + str(i+1) \
+				+ " of " + str(current_item(3))
 				expanded_food_chilled_price.update(
 				{currstring:current_item(2)})
-	print(expanded_food_price.items()) #For tests, check items in the list
+	print(expanded_food_price.items())
+
 	
 	#calculate total price
 	total_price = 0.0
@@ -154,10 +147,10 @@ def main():
 	#calculate and round average price
 	print(person_list)
 	avg_price = total_price/(len(person_list))
-	avg_price = int(avg_price*100)/100.00 #to nearest cent
+	avg_price = int(avg_price*100)/100.00
 	#avg_chilled_price = total_price/(len(person_chilled_list))
 	#avg_chilled_price = int(avg_chilled_price*100)/100.00
-	'''The chilled list will be implemented in the future.'''
+	
 	
 	expanded_by_cent = []
 	c = 0
@@ -172,7 +165,7 @@ def main():
 	b = 0
 	iterate_to = int(avg_price*100)
 	person_amnt_dict = {}
-
+	
 	while i<len(person_list):
 		cent_list_for_person = []
 		while b<iterate_to:
@@ -183,10 +176,8 @@ def main():
 		iterate_to += int(avg_price*100)
 	#you should now be getting something like 'jack':['item1','item2',
 	#'item2','item3'], 'jill':['item3','item3','item4'...]
-	'''Note that this is expanded by cent. an item that costs $1.99 will
-		have 199 entries.'''
 	
-	#consolidate or repack values into a dictionary nested in a dictionary
+	#consolidate or repack values into a dictionary in a dictionary
 	current_list = 0
 	current_person = 0
 	person_price_dict = {}
@@ -201,25 +192,19 @@ def main():
 			while current_list[internal_iterator] == last_item:
 				current_counter += 1
 				internal_iterator += 1
-				#below shows the progress in numbers, for testing purposes
 				sys.stdout.write('\r'+str(internal_iterator)+"/"+str(len(current_list)))
-				'''Below breaks it before an error. Probably something
+				'''this breaks it before an error. Probably something
 				better exists.'''
 				if internal_iterator >= len(current_list):
 					break
 			current_percent = current_counter/(expanded_food_price[last_item]*100)
 			if internal_iterator < len(current_list):
 				last_item = current_list[internal_iterator]
-				'''again, something better, simpler, and more efficient
-					exists. This is what I did with my limited 
-					programming expertise'''
+				#again, something better exists.
 			price_percent_dict.update({current_list[internal_iterator-1]:current_percent})
 		person_price_dict.update({current_person:price_percent_dict})
 	'''intent: A dict of items that goes {Person:{Food1:percent, 
-		food2:percent, food3:percent}} in person_price_dict,
-		so it would be something like:
-		"bagels (number 3 of 3)":0.57, apples (number 1 of 1):1.0, 
-		chocolate (number 1 of 3):0.26'''
+		food2:percent, food3:percent}} in person_price_dict'''
 		
 	#put all key items with a value>50% into list that goes inside dict
 	person = 0
@@ -236,10 +221,6 @@ def main():
 		person_item_dict.update({person:item_list})
 	a=0
 	b=0
-	'''to use the previous docstring example, now the list would be:
-		Person:[Bagels, Apples]; Chocolate is not included as that was
-		under 50%.'''
-	
 	print("\n")
 	email = "orufoodbot@gmail.com"
 	subject = "Food to buy at the coming regatta:"
@@ -252,4 +233,3 @@ def main():
 	
 if __name__=="__main__":
 	main()
-
